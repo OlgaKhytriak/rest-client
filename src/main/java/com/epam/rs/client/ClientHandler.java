@@ -22,9 +22,8 @@ public class ClientHandler {
     }
 
     public String performGET(String url) {
-        LOG.info(String.format(" ---- %s.perform GET() ----- ", this.getClass().getSimpleName()));
+        LOG.info(String.format(" ---- %s. perform GET() ----- ", this.getClass().getSimpleName()));
         webResource = client.resource(url);
-        LOG.info("Setting accept 'application/json'");
         response = webResource.accept("application/json").get(ClientResponse.class);
         LOG.info("Response: " + response);
         return response.getEntity(String.class);

@@ -10,7 +10,6 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.epam.model.Book;
 import com.epam.model.NotValidNewsException;
 import com.epam.rs.client.ClientHandler;
 import com.google.gson.Gson;
@@ -28,11 +27,6 @@ public class NewsPaperTest {
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
-
-	@BeforeMethod
-	public void init(){
-
-	}
 	@Test
 	public void getAllNewsTest(){
 		LOG.info(String.format(" ---- %s. getAllNewsTest() ----- ", this.getClass().getSimpleName()));
@@ -40,18 +34,19 @@ public class NewsPaperTest {
 		LOG.info("Is response null? -  "+(resultList == null));
 		assertNotNull(resultList);
 	}
-	/*
+
 	@Test
-	public void getBookByIdTest(){
-		LOG.info("getBookByIdTest started: Gets book by id from the service and checks it's value");
-		Book expected = new Book("The Sacred Sword", "Scott Mariani", "Action & Adventure",1);
-		Book actual = gson.fromJson(client.performGET(NEWSPAPER_URL +"/1"), Book.class);
-		Reporter.log("Response is null: "+(actual == null));
-		assertNotNull(actual);
-		Reporter.log("Verification if equal. Actual=["+actual+"] expected["+expected+"] is = "+(actual.equals(expected)));
-		assertEquals(actual,expected);
+	public void getNewsByIdTest(){
+		LOG.info(String.format(" ---- %s. getNewsByIdTest() ----- ", this.getClass().getSimpleName()));
+		SingleNews expectedNews = new SingleNews(1,"Gold-medal","Sport","Gold medalist Abramenko carries Ukrainian flag at Winter Olympics 2018 closing ceremony","https://24tv.ua");
+		SingleNews actualNews = gson.fromJson(clientHandler.performGET(NEWSPAPER_URL +"/1"), SingleNews.class);
+		LOG.info("Response is null: "+(actualNews == null));
+		assertNotNull(actualNews);
+		LOG.info(String.format("Actual result = %s",actualNews.toString()));
+		LOG.info(String.format("Expect result = %s",expectedNews.toString()));
+		assertEquals(actualNews,expectedNews,"Is not equals");
 	}
-	
+	/*
 	@Test
 	public void getBooksByNameParamTest(){
 		LOG.info("getBookByIdTest started: Gets book by name from the service and checks it's value");

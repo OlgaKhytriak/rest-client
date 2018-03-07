@@ -39,6 +39,12 @@ public class SingleNews {
         }
         return false;
     }
+@Override
+    public String toString() {
+        return String.format(
+                "[Single News]: id = %s; title = %s; category= %s; description = %s; link = %s ",
+                id, title, category,description,link);
+    }
 
 
     public Integer getId() {

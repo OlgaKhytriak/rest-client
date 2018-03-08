@@ -2,6 +2,7 @@ package com.epam.rs.client;
 
 import javax.ws.rs.core.MediaType;
 
+import com.epam.model.SingleNews;
 import org.apache.log4j.Logger;
 import org.testng.Reporter;
 
@@ -29,17 +30,18 @@ public class ClientHandler {
         return response.getEntity(String.class);
     }
 
-    public String doPost(String url, Book book) throws NotValidNewsException {
-        Reporter.log("doPost method started");
-        if (!isValid(book)) {
-            Reporter.log("Book is NOT VALID: " + book);
+    public String performPost(String url, SingleNews singleNews) throws NotValidNewsException {
+        LOG.info(String.format(" ---- %s. perform POST() ----- ", this.getClass().getSimpleName()));
+        if (!isValid(singleNews)) {
+            LOG.info("News is NOT VALID: " + singleNews);
             throw new NotValidNewsException();
         }
         webResource = client.resource(url);
+        LOG.info(url + transformToUrlUncodedType(singleNews));
         Reporter.log("Setting accept 'application/json'");
         response = webResource.accept("application/json")
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(ClientResponse.class, transformToUrlUncodedType(book));
+                .post(ClientResponse.class, transformToUrlUncodedType(singleNews));
         Reporter.log("Response: " + response);
         return response.getEntity(String.class);
     }
@@ -54,16 +56,17 @@ public class ClientHandler {
         return response.getEntity(String.class);
     }
 
-    private String transformToUrlUncodedType(Book book) {
-        return "name=" + book.getName() + "&" +
-                "author=" + book.getAuthor() + "&" +
-                "genre=" + book.getGenre() + "&" +
-                "id=" + book.getId();
+    private String transformToUrlUncodedType(SingleNews singleNews) {
+        return "title=" + singleNews.getTitle() + "&" +
+                "category=" + singleNews.getCategory() + "&" +
+                "description=" + singleNews.getDescription() + "&" +
+                "link=" + singleNews.getLink() + "&" +
+                "id=" + singleNews.getId();
     }
 
-    private boolean isValid(Book book) {
+    private boolean isValid(SingleNews singleNews) {
         boolean isValid;
-        if (book.getId() > 0 && book.getAuthor() != null && book.getName() != null && book.getGenre() != null) {
+        if (singleNews.getId() > 0 && singleNews.getTitle() != null && singleNews.getCategory() != null && singleNews.getDescription() != null) {
             isValid = true;
         } else {
             isValid = false;

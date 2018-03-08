@@ -46,55 +46,46 @@ public class NewsPaperTest {
 		LOG.info(String.format("Expect result = %s",expectedNews.toString()));
 		assertEquals(actualNews,expectedNews,"Is not equals");
 	}
-	/*
+
 	@Test
-	public void getBooksByNameParamTest(){
-		LOG.info("getBookByIdTest started: Gets book by name from the service and checks it's value");
-		ArrayList<Book> resultList = gson.fromJson(client.performGET(NEWSPAPER_URL +"/params?name=Inferno"), ArrayList.class);
-		Reporter.log("Response is null: "+(resultList == null));
+	public void getNewsByTitleTest(){
+		LOG.info(String.format(" ---- %s. getNewsByTitleTest() ----- ", this.getClass().getSimpleName()));
+		ArrayList<SingleNews> resultList = gson.fromJson(clientHandler.performGET(NEWSPAPER_URL +"/params?title=Olympics"), ArrayList.class);
+		LOG.info("Response is null: "+(resultList == null));
 		assertNotNull(resultList);
-		Reporter.log("Verification if equal. Actual=["+resultList.size()+"] expected["+1+"] is = "+(resultList.size() == 1));
+		LOG.info("Verification if equal. Actual=["+resultList.size()+"] expected["+1+"] is = "+(resultList.size() == 1));
 		assertEquals(resultList.size(),1);
 	}
-	
+
 	@Test
-	public void getBooksByAuthorParamTest(){
-		LOG.info("getBooksByAuthorParamTest started: Gets book by author from the service and checks it's size");
-		ArrayList<Book> resultList = gson.fromJson(client.performGET(NEWSPAPER_URL +"/params?author=Scott%20Mariani"), ArrayList.class);
-		Reporter.log("Response is null: "+(resultList == null));
+	public void getNewsByCategoryTest(){
+		LOG.info(String.format(" ---- %s. getNewsByCategoryTest() ----- ", this.getClass().getSimpleName()));
+		ArrayList<SingleNews> resultList = gson.fromJson(clientHandler.performGET(NEWSPAPER_URL +"/params?category=Sport"), ArrayList.class);
+		LOG.info("Response is null: "+(resultList == null));
 		assertNotNull(resultList);
-		Reporter.log("Verification if equal. Actual=["+resultList.size()+"] expected["+2+"] is = "+(resultList.size() == 2));
-		assertEquals(resultList.size(),2);
+		LOG.info("Verification if equal. Actual=["+resultList.size()+"] expected["+4+"] is = "+(resultList.size() == 4));
+		assertEquals(resultList.size(),4);
 	}
-	
+
 	@Test
-	public void getBooksByNameAndAuthorParamTest(){
-		LOG.info("getBooksByNameAndAuthorParamTest started: Gets book with author and name params from the service and checks it's size");
-		ArrayList<Book> resultList = gson.fromJson(client.performGET(NEWSPAPER_URL +"/params?name=Inferno&author=Dan%20Brown"),
+	public void getNewsByTitleAndCategoryTest(){
+		LOG.info(String.format(" ---- %s. getNewsByTitleAndCategoryTest() ----- ", this.getClass().getSimpleName()));
+		ArrayList<SingleNews> resultList = gson.fromJson(clientHandler.performGET(NEWSPAPER_URL +"/params?title=Shakhtar&category=Sport"),
 				ArrayList.class);
-		Reporter.log("Response is null: "+(resultList == null));
+		LOG.info("Response is null: "+(resultList == null));
 		assertNotNull(resultList);
-		Reporter.log("Verification if equal. Actual=["+resultList.size()+"] expected["+1+"] is = "+(resultList.size() == 1));
+		LOG.info("Verification if equal. Actual=["+resultList.size()+"] expected["+1+"] is = "+(resultList.size() == 1));
 		assertEquals(resultList.size(),1);
 	}
-	
+
+
 	@Test
-	public void postBookWithExistId() throws NotValidNewsException {
-		LOG.info("postBookWithExistId started: update book with aleready exist id in the service");
-		Book replaceBook = new Book("Some Name", "Some Author", "Some Genre",103);
-		client.doPost(NEWSPAPER_URL +"/5", replaceBook);
-		Book newBook = gson.fromJson(client.performGET(NEWSPAPER_URL +"/5"), Book.class);
-		Reporter.log("Verification if equal. Actual=["+newBook+"] expected["+replaceBook+"] is = "+(newBook.equals(replaceBook)));
-		assertEquals(newBook,replaceBook);
-	}
-	
-	@Test
-	public void postBookWithNotExistId() throws NotValidNewsException {
+	public void postBookWithNotExistId() throws NotValidNewsException {//---
 		LOG.info("postBookWithNotExistId started: add book without aleready exist id in the service");
-		Book newBook = new Book("New Book", "Author", "Genre",102);
-		
-		client.doPost(NEWSPAPER_URL +"/102", newBook);
-		
+		SingleNews newNews = new SingleNews(102,"New-title","Newe-category","Bla-bla-bla","https://ukr.net");
+
+		clientHandler.performPost(NEWSPAPER_URL +"/102", newNews);
+		/*
 		Book actualBook = gson.fromJson(client.performGET(NEWSPAPER_URL +"/102"), Book.class);
 		Reporter.log("Response is null: "+(actualBook == null));
 		assertNotNull(actualBook);
@@ -102,14 +93,25 @@ public class NewsPaperTest {
 		assertEquals(actualBook,newBook);
 		Reporter.log("Deleting created book");
 		client.doDelete(NEWSPAPER_URL +"/102");
+		*/
 	}
-	
+
+	@Test
+	public void postUpdateNewsWithExistIdTest() throws NotValidNewsException {//-----
+		LOG.info(String.format(" ---- %s. postUpdateNewsWithExistIdTest() ----- ", this.getClass().getSimpleName()));
+		SingleNews replaceNews = new SingleNews(101,"New-new-new","Cat-new","Bla bla bla","https://ukr.net");
+		clientHandler.performPost(NEWSPAPER_URL+"/5", replaceNews);
+		SingleNews newNews = gson.fromJson(clientHandler.performGET(NEWSPAPER_URL+"/5"), SingleNews.class);
+		LOG.info("Verification if equal. Actual=["+newNews+"] expected["+replaceNews+"] is = "+(newNews.equals(replaceNews)));
+		assertEquals(newNews,replaceNews);
+	}
+
 	@Test
 	public void deleteBookWithExistId() throws NotValidNewsException {
 		LOG.info("deleteBookWithExistId started: delete book with aleready exist id in the service");
-		Book book = new Book("The Motorcycle Diaries", "Ernesto 'Che' Guevara", "Travel",9);
-		String actualResponse = client.doDelete(NEWSPAPER_URL +"/9");
-		String expextedResponse = "{\"Message\":\"Book was deleted successfully\"}";
+		//SingleNews singleNews = new SingleNews("The Motorcycle Diaries", "Ernesto 'Che' Guevara", "Travel",9);
+		String actualResponse = clientHandler.doDelete(NEWSPAPER_URL +"/9");
+		String expextedResponse = "{\"Message\":\"News is deleted successfully\"}";
 		
 		Reporter.log("Response is null: "+(actualResponse == null));
 		assertNotNull(actualResponse);
@@ -117,10 +119,10 @@ public class NewsPaperTest {
 				+(actualResponse.equals(expextedResponse)));
 		assertEquals(actualResponse,expextedResponse);
 		
-		Reporter.log("Adding deleted book");
-		client.doPost(NEWSPAPER_URL +"/9", book);
+		//Reporter.log("Adding deleted book");
+		//client.doPost(NEWSPAPER_URL +"/9", book);
 	}
-	
+/*
 	@Test
 	public void deleteBookWithNotExistId() throws NotValidNewsException {
 		LOG.info("deleteBookWithNotExistId started: delete book without aleready exist id in the service");

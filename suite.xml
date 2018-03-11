@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="TestNG Load Testing Suite for Report">
+    <listeners>
+        <listener class-name="com.epam.utils.CustomTestListener"/>
+        <listener class-name="org.uncommons.reportng.HTMLReporter"/>
+        <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
+    </listeners>
+
+    <test name="Must Fail Test">
+        <classes>
+            <class name="com.epam.tests.NewspaperTest">
+            </class>
+        </classes>
+    </test>
+
+</suite>

@@ -9,7 +9,7 @@
 
    <test name="LibararyServiceTest">
      <classes>
-      	<class name="com.epam.tests.NewsPaperTest" />
+      	<class name="com.epam.tests.NewspaperTest" />
    	 </classes>
    </test>
 </suite>

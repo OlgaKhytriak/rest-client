@@ -1,4 +1,4 @@
-package com.epam.rs.client;
+package com.epam.client;
 
 import javax.ws.rs.core.MediaType;
 
@@ -6,7 +6,6 @@ import com.epam.model.SingleNews;
 import org.apache.log4j.Logger;
 import org.testng.Reporter;
 
-import com.epam.model.Book;
 import com.epam.model.NotValidNewsException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -47,7 +46,7 @@ public class ClientHandler {
     }
 
     public String doDelete(String url) {
-        Reporter.log("doDelete method started");
+        LOG.info(String.format(" ---- %s. perform DELETE() ----- ", this.getClass().getSimpleName()));
         webResource = client.resource(url);
         Reporter.log("Setting accept 'application/json'");
         response = webResource.accept("application/json")
